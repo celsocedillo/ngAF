@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-header">
+    Featured
+  </div>
+  <div class="card-body">
+    <p-table #dt [value]="lista"  [showLoader]="true" [rowHover]="true"  >
+      <ng-template pTemplate="header">
+        <tr>
+          <th width=50px>Id</th>
+          <th width=75px>FechaActa</th>
+          <th width=200px>NumeroActa</th>
+          <th>Comentarios</th>
+          <th width=100px>Estado <i class="fa fa-filter" (click)="op.toggle($event)"></i>
+            <!-- <p-multiSelect [options]="lestados" (onChange)="dt.filter($event.value, 'estado', 'in')"></p-multiSelect> -->
+          </th>
+          <th width=100px style="text-align: right;">#Activos</th>
+          <th width=100px style="text-align: right;">TotalValor</th>
+          <th width=50px ></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item >
+        <tr class="ui-selectable-row">
+          <td class="td_oneline">{{item.actaId}}</td>
+          <td class="td_oneline">{{item.fechaActa | date : 'dd/MM/yyyy'}}</td>
+          <td>{{item.numeroActa}}</td>
+          <td>
+            <span>{{item.comentarios}}</span><br>
+            <span style="font-size: 9px;">De: {{item.estadoInicial}} a {{item.estadoFinal}}</span><br>
+            <span *ngIf='item.estado === "A"' style="font-size: 9px;">Aprobado {{item.fechaAprueba | date: 'dd/MM/yyyy'}} por {{item.usuarioAprueba}}</span><br>
+          </td>
+          <td >
+            <span *ngIf='item.estado === "A"' class="badge badge-pill badge-success">Aprobado</span>
+            <span *ngIf='item.estado === "I"' class="badge badge-pill badge-secondary">Ingresado</span>
+          </td>
+          <td style="text-align: right;">{{item.numeroActivos | number : '0.0'}}</td>
+          <td style="text-align: right;">{{item.totalValor | number :'0.2'}}</td>
+          <td style="text-align: center;">
+            <button class="btn btn-outline-secondary btn-xs" (click)="clickVer(item)"><i class="fa fa-search"></i></button>
+          </td>
+        </tr>  
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-overlayPanel #op [appendTo]="'body'">
+  <!-- <p-listbox [options]="lestados" multiple="multiple" checkbox="checkbox"  optionLabel="label" (onChange)="dt.filter(($event.value.map(function(a){return a.value})), 'estado', 'in')">
+  </p-listbox> -->
+  <p-multiSelect [options]="lestados" [overlayVisible]="true" [filter]="false" (onChange)="dt.filter($event.value, 'estado','in')"></p-multiSelect>
+</p-overlayPanel>
