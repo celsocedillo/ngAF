@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { IVwActa } from '../../modelo/modelo';
 import { ActasService } from '../../services/actas.service';
@@ -7,6 +8,7 @@ import { ActasService } from '../../services/actas.service';
 import { TableModule } from 'primeng/table';
 import { SelectItem } from 'primeng/api/selectitem';
 import {MultiSelectModule} from 'primeng/multiselect';
+import { NgxSpinnerService } from "ngx-spinner";
 
 
 @Component({
@@ -20,19 +22,21 @@ export class ActasComponent implements OnInit {
   lestados : SelectItem[];
   selestado : string;
 
-  constructor(private actaservice: ActasService) { }
+  constructor(private actaservice: ActasService, private router: Router,
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     this.lestados = [
       {label: 'Aprobado', value: 'A'},
       {label: 'Ingresado', value: 'I'}
     ];
-    this.actaservice.getActas().subscribe(actas => { this.lista = actas;  /*this.gridApi.sizeColumnsToFit();*/ },
-    error => console.error(error));
+    this.spinner.show();
+    this.actaservice.getActas().subscribe(actas => { this.lista = actas; this.spinner.hide(); /*this.gridApi.sizeColumnsToFit();*/ },
+    error => {console.error(error); this.spinner.hide();});
   }
 
   clickVer(item) {
-    console.log(item);
+    this.router.navigate(['/acta/', item.actaId]);
   }
 
   onChange(evento){

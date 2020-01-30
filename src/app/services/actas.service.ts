@@ -29,4 +29,18 @@ export class ActasService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
+  getActa(id): Observable<any>{
+    // console.log('servicio:');
+    // console.log(id);
+    return this.http.get<any>(this.apiUrl + '/' + id);
+  }
+
+  insertaActa(pacta): Observable<any>{
+    return this.http.post(this.apiUrl, pacta);
+  }
+
+  updateActa(pacta): Observable<any> {
+    return this.http.put<any>(this.apiUrl, pacta);
+  }
+
 }
