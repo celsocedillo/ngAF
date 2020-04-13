@@ -14,6 +14,7 @@ import { ActasComponent } from './pages/acta/actas.component';
 
 import { ActasService } from './services/actas.service';
 import { VwactivosService } from './services/vwactivos.service';
+import { OtrosService } from './services/otros.service';
 
 import { MomentModule } from 'ngx-moment';
 import { TableModule } from 'primeng/table';
@@ -30,6 +31,9 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import { NgxSpinnerModule } from "ngx-spinner";
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
+import {ToastModule} from 'primeng/toast';
+import { CalendarModule } from 'primeng/calendar';
+
 
 import { ActaformComponent } from './pages/acta/actaform/actaform.component';
 
@@ -60,6 +64,8 @@ registerLocaleData(es, 'es-EC');
     DialogModule,
     AutoCompleteModule,
     ConfirmDialogModule,
+    ToastModule,
+    CalendarModule,
     MomentModule.forRoot({relativeTimeThresholdOptions:{ 'm':59}})
     //DataTablesModule
     //AgGridModule.withComponents([])
@@ -67,6 +73,7 @@ registerLocaleData(es, 'es-EC');
   providers: [
     ActasService,
     VwactivosService,
+    OtrosService,
     MessageService,
     ConfirmationService,
     {provide: LOCALE_ID, useValue: "es-EC"}

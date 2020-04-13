@@ -1,0 +1,401 @@
+<p-confirmDialog header="Eliminar activo" icon="pi pi-exclamation-triangle" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-dialog header="Aprobacion de acta" 
+          icon="pi pi-exclamation-triangle" 
+          [style]="{width: '80vw'}"
+          [modal]="true"
+          [(visible)] = "dlgAprobar">
+    <div *ngIf="xResultadoValidacion == 'E' ">
+        {{msgAprobacion}}
+    </div>
+    <div *ngIf="xResultadoValidacion == 'N' ">
+        <h6>Los siguientes activos estan en otro estado de situacion, verifique los siguiente items.</h6>
+        <p-table  [value]="lstActivosValidar"   
+                  [scrollable]="true" 
+                  scrollHeight="100px">
+            <ng-template pTemplate="header">
+                <tr>
+                <th width=75px>Codigo</th>
+                <th>Tipo/Clase</th>
+                <th width=180px>Activo</th>
+                <th>EstSituacion</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item >
+                <tr>
+                <td width=75px>{{item.CODIGO}}</td>
+                <td>{{item.TIPO_ACTIVO}} / {{item.CLASE_ACTIVO}}</td>
+                <td>{{item.DESCRIPCION}}</td>
+                <td>{{item.ESTADO_SITUACION}}</td>
+                </tr>  
+            </ng-template>
+        </p-table>        
+    </div>
+    <div *ngIf="xResultadoValidacion == 'V' ">
+        <h6>Acta validada</h6><br>
+        <h6>Seguro desea continuar con la aprobacion del acta?</h6>
+    </div>
+    <p-footer *ngIf="xResultadoValidacion == 'V' ">
+        <button class="btn btn-outline-primary" (click)="apruebaActa()" >
+            <i class="fa fa-check"></i>
+            Aceptar
+        </button>
+    </p-footer>
+</p-dialog>
+<p-toast [style]="{width: '600px'}" position="center" key="c" [modal]="true" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="message">
+        <div style="text-align: center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+            <h5>{{message.summary}}</h5>
+            <p>{{message.detail}}</p>
+        </div>
+       
+    </ng-template>
+</p-toast>
+<p-toast [style]="{marginTop: '26px'}"></p-toast>
+<!-- <p-dialog header="Titulo" [(visible)]="display" modal="true" [style]="{width: '800px', height: '500px'}">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Busqueda por codigo" aria-label="Recipient's username" aria-describedby="basic-addon2" (keyup.enter)="buscarCoincidencias(textoBuscar.value)" (keydown)="bajar($event)" #textoBuscar (focus)="onFocus()" autofocus>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary btn-sm" type="button" (click)='buscarCoincidencias(textoBuscar.value)'><i class="fa fa-search"></i></button>
+        </div>
+        <ngx-spinner name="spBusqueda" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium" >
+            <p class="loading">Cargando datos...</p>
+        </ngx-spinner>
+        <div  #da >        
+            <p-table #tact [value]="lActivosCoincidencia" id="tAct"   
+            [showLoader]="true" 
+            [rowHover]="true" 
+            [scrollable]="true"
+            selectionMode="single"
+            [(selection)]="activoSeleccionado"
+            (onRowSelect)="onSelect($event)"
+            scrollHeight="250px"
+            class="mt-3 tabRefe"  >
+   <ng-template pTemplate="header">
+     <tr>
+       <th width=75px> Cod.Ema </th>
+       <th width=75x> Cod.Conc </th>
+       <th width=75px> Cod.Contr  </th>
+       <th>Tipo/Clase</th>
+       <th>Activo</th>
+     </tr>
+   </ng-template>
+   <ng-template pTemplate="body" let-item >
+     <tr [pSelectableRow]="item">
+       <td>{{item.codigoEcapag}}</td>
+       <td>{{item.codigoConcesionaria}}</td>
+       <td>{{item.codigoActivoControl}}</td>
+       <td>{{((item.Activo.tipoActivo.length>20) ? (item.Activo.tipoActivo | slice:0:20)+"...": item.Activo.tipoActivo) | titlecase}} -
+           {{((item.Activo.claseActivo.length>27) ? (item.Activo.claseActivo | slice:0:27)+"...": item.Activo.claseActivo) | titlecase}}
+       </td>
+       <td>{{(((item.Activo.descripcion) ? item.Activo.descripcion.length>65 : "") ? (item.Activo.descripcion | slice:0:65)+"...": item.Activo.descripcion) | titlecase}}</td>
+     </tr>  
+   </ng-template>
+ </p-table>
+</div>
+</div>
+
+</p-dialog>
+ -->
+ <!-- <p-messages [(value)]="msgs"></p-messages> -->
+<ngx-spinner name="spForm" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium" >
+    <p class="loading">Cargando datos...</p>
+</ngx-spinner>
+<div class="card">
+    <div class="card-header">
+        <h6>Acta</h6>
+    </div>
+    <!-- <form id="frmActa" [formGroup]="frmActa" (ngSubmit)="grabar()" novalidate="novalidate" class="form-horizontal">         -->
+    <form id="frmActa" [formGroup]="frmActa" novalidate="novalidate" class="form-horizontal">        
+    <div class="card-body">
+            <div class="row" *ngIf="acta?.estado === 'A'">
+                <div class="col-md-8"> 
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Id</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext"  value={{acta.id}}>
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Acta #</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext"  value={{acta.numeroActa}}>
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Fecha acta</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="acta.fechaActa | date : 'dd/MM/yyyy'">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Comentarios</label>
+                        <div class="col-sm-10">
+                            <textarea readonly class="form-control-plaintext"  [value]="acta.comentarios | titlecase"></textarea>
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Operacion</label>
+                        <label class="col-sm-10 col-form-label">De {{acta.EstadoInicial.descripcion}} a {{acta.EstadoFinal.descripcion}}</label>                    
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Creado</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="acta.fechaIngresa | date : 'dd/MM/yyyy'">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Por</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="acta.usuarioIngresa">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Aprobado</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="acta.fechaAprueba | date : 'dd/MM/yyyy'">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Por</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  value={{acta.usuarioAprueba}}>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="acta?.estado === 'I'">
+                <div class="col-md-8"> 
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Id</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control" formControlName="id">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Acta #</label>
+                        <div class="col-sm-10">
+                            <input type="text"  class="form-control" formControlName="numeroActa" [ngClass]="{'is-invalid': (frmActa.get('numeroActa').touched || frmActa.get('numeroActa').dirty) && !frmActa.get('numeroActa').valid}" >
+                            <div class="invalid-feedback" *ngIf="(frmActa.get('numeroActa').touched || frmActa.get('numeroActa').dirty) && frmActa.get('numeroActa').errors">
+                                <div *ngIf="frmActa.get('numeroActa').errors.required">
+                                El campo número de acta es requerido
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Fecha acta</label>
+                        <div class="col-sm-10">
+                            <!-- <input type="date" class="form-control" formControlName="fechaActa"  [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}" > -->
+                            <p-calendar formControlName="fechaActa" placeholder="aaaa-mm-dd" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  inputStyleClass='form-control' dateFormat="yy-mm-dd" [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}"></p-calendar>
+                            <div class="invalid-feedback" *ngIf="(frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && frmActa.get('fechaActa').errors">
+                                <div *ngIf="frmActa.get('fechaActa').errors.required">
+                                El campo fecha de acta es requerido, formato AAAA-MM-DD
+                                </div>
+                            </div>                            
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Comentarios</label>
+                        <div class="col-sm-10">
+                            <textarea  class="form-control"  formControlName="comentarios" [ngClass]="{'is-invalid': (frmActa.get('comentarios').touched || frmActa.get('comentarios').dirty) && !frmActa.get('comentarios').valid}"></textarea>
+                            <div class="invalid-feedback" *ngIf="(frmActa.get('comentarios').touched || frmActa.get('comentarios').dirty) && frmActa.get('comentarios').errors">
+                                <div *ngIf="frmActa.get('comentarios').errors.required">
+                                El campo comentario es requerido
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Est. Inicial</label>
+                        <div class="col-sm-10">
+                            <select formControlName="estadoInicialId" id="estadoInicialId" class="form-control"
+                                [attr.disabled]="(acta.numeroActivos > 0) ? 'disabled' : null"
+                            >
+                                <option *ngFor="let estado of lstEstadosSituacion; let i = index" [value]="lstEstadosSituacion[i].value">
+                                {{lstEstadosSituacion[i].name}}
+                                </option>
+                            </select>
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Est. Final</label>
+                        <div class="col-sm-10">
+                            <select formControlName="estadoFinalId" id="estadoFinalId" class="form-control">
+                                <option *ngFor="let estado of lstEstadosSituacion; let i = index" [value]="lstEstadosSituacion[i].value">
+                                {{lstEstadosSituacion[i].name}}
+                                </option>
+                            </select>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Creado</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="acta.fechaIngresa | date : 'dd/MM/yyyy'">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Por</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="acta.usuarioIngresa">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Aprobado</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="acta.fechaAprueba | date : 'dd/MM/yyyy'">
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Por</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly class="form-control-plaintext"  value={{acta.usuarioAprueba}}>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="card-footer">
+            <!--Botones-->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group row mt-1">
+                        <div  class="col-md-6 pull-right">
+                            <button class="btn btn-outline-success " 
+                            (click)="validaActa()"
+                            *ngIf="acta?.estado == 'I' && actaAprobar == 'S'"
+                            [disabled]="!frmActa.valid"
+                            >
+                                <i class="fa fa-check-square-o"></i>
+                                Aprobar
+                            </button>
+
+                            <button class="btn btn-outline-primary " 
+                                    (click)="grabar()"
+                                    *ngIf="acta?.estado == 'I'"
+                                    [disabled]="!frmActa.valid"
+                            >
+                                <i class="fa fa-save"></i>
+                                Grabar
+                            </button>
+
+                            <button class="btn btn-outline-secondary " (click)="cancelar()">
+                                <i class="fa fa-long-arrow-left"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--Fin Botones-->
+
+    </div>
+    </form>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h6>Lista de activos</h6>
+    </div>
+    <div class="card-body">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="(acta?.estado === 'I') && modoEdicion">
+            <div class="col-sm-8">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label col-form-label-w">Agregar activo</label>
+                    <div class="col-sm-10">
+                        <p-autoComplete [(ngModel)]="activoSeleccionado"
+                        [suggestions]="lActivosCoincidencia"
+                        (completeMethod)="filtrarActivo($event)"
+                        (onSelect)="agregarActivo()"
+                        placeholder="Buscar por codigos"
+                        [style]="{'width':'100%'}"
+                        [inputStyle]="{'width':'100%'}"
+                        inputStyleClass="form-control"
+                        field=null >
+                            <ng-template let-activoSeleccionado pTemplate="item">
+                            <table class="tBusquedaActivo" >
+                                <tr >
+                                    <td width="5%" class="tdCeldaLabel">CodEma</td>
+                                    <td width="10%">{{activoSeleccionado.codEcapag}}</td>
+                                    <td rowspan="3" width="35%">
+                                        {{activoSeleccionado.tipoActivo | titlecase}} / 
+                                        {{activoSeleccionado.claseActivo | titlecase}}
+                                    </td>
+                                    <td rowspan="3">{{(((activoSeleccionado.descripcion) ? activoSeleccionado.descripcion.length>120 : "") ? (activoSeleccionado.descripcion | slice:0:120)+"...": activoSeleccionado.descripcion) | titlecase}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="tdCeldaLabel">CodConc.</td>
+                                    <td>{{activoSeleccionado.codConces}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="tdCeldaLabel">CodCont.</td>
+                                    <td>{{activoSeleccionado.codActControl}}</td>
+                                </tr>
+                            </table>
+                            </ng-template>
+                        </p-autoComplete>
+        
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <button class="btn btn-outline-light btn-sm" (click)="eliminarActivo()"><i class="fa fa-trash"></i> Eliminar activo</button>
+                </div>
+            </div>
+        </nav>
+        <div class="row" >
+            <div class="col-sm-12">
+                <p-table #dt [value]="acta?.Detalle"   
+                [showLoader]="true" 
+                [rowHover]="true" 
+                [(selection)]="activosSeleccionados"
+                [scrollable]="true" 
+                scrollHeight="210px"
+                class="mt-3"  >
+                    <ng-template pTemplate="header">
+                        <tr>
+                        <th style="width: 2em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th width=75px>Codigo</th>
+                        <th width=180px>Tipo</th>
+                        <th width=200px>Clase</th>
+                        <th width=300px>Activo</th>
+                        <th width=150px style="text-align: right;">Valor</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item >
+                        <tr [pSelectableRow]="item">
+                        <td style="width: 2em">
+                            <p-tableCheckbox [value]="item"></p-tableCheckbox>
+                        </td>
+                        <td width=75px>{{item.codigo}}</td>
+                        <td>{{((item.Activo.tipoActivo.length>20) ? (item.Activo.tipoActivo | slice:0:20)+"...": item.Activo.tipoActivo) | titlecase}}</td>
+                        <td>{{((item.Activo.claseActivo.length>27) ? (item.Activo.claseActivo | slice:0:27)+"...": item.Activo.claseActivo) | titlecase}}</td>
+                        <td>{{(((item.Activo.descripcion) ? item.Activo.descripcion.length>65 : "") ? (item.Activo.descripcion | slice:0:65)+"...": item.Activo.descripcion) | titlecase}}</td>
+                        <td style="text-align: right;">{{item.valorCompraIva | number :'0.2' }}</td>
+                        </tr>  
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="3">
+                                # de activos {{acta?.numeroActivos}}
+                            </td>
+                            <td></td>
+                            <td style="text-align: right;">Total</td>
+                            <td style="text-align: right;">{{acta?.totalValor  | number :'0.2' }}</td>
+                        </tr>
+                    </ng-template>
+                    </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+
