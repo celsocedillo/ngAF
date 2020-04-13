@@ -46,6 +46,7 @@ export class AppComponent {
         
       }else{
         console.log('Borrando');
+        console.log('Borrando');
         localStorage.clear();
       }
     });
