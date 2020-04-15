@@ -15,6 +15,7 @@ import { ActasComponent } from './pages/acta/actas.component';
 import { ActasService } from './services/actas.service';
 import { VwactivosService } from './services/vwactivos.service';
 import { OtrosService } from './services/otros.service';
+import { CabeceraService } from './services/cabecera.service';
 
 import { MomentModule } from 'ngx-moment';
 import { TableModule } from 'primeng/table';
@@ -74,6 +75,7 @@ registerLocaleData(es, 'es-EC');
     ActasService,
     VwactivosService,
     OtrosService,
+    CabeceraService,
     MessageService,
     ConfirmationService,
     {provide: LOCALE_ID, useValue: "es-EC"}

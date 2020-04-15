@@ -28,6 +28,7 @@ export class ActasComponent implements OnInit {
   @Output() headerUsuario = new EventEmitter<string>();
   @ViewChild('dt', {static:false}) dt: Table;
   lestadosSituacion : any[] = [];
+  selectedFiltro :any[]= [];
 
   constructor(private actaservice: ActasService, private otrosService : OtrosService,
               private router: Router, 
@@ -49,6 +50,7 @@ export class ActasComponent implements OnInit {
       {label: 'Aprobado', value: 'A'},
       {label: 'Ingresado', value: 'I'}
     ];
+    this.selectedFiltro = [this.lestados[1].value];
   }
 
   buscarActas(){

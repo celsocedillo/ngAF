@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OtrosService } from './services/otros.service';
+import { HeaderComponent } from './pages/shared/header/header.component';
+import { conditionallyCreateMapObjectLiteral } from '@angular/compiler/src/render3/view/util';
+import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
+import { CabeceraService} from './services/cabecera.service';
+import { environment} from './../environments/environment';
 
 
 @Component({
@@ -9,28 +14,28 @@ import { OtrosService } from './services/otros.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'ClientApp';
   usuario : string;
+  @ViewChild(HeaderComponent, {static: false}) cabecera;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private otrosService: OtrosService){
-    console.log('constructor app 1');
-    
+              private otrosService: OtrosService,
+              private cabeceraService: CabeceraService){
+    console.log('apiUrl:' + environment.apiUrl);
+    localStorage.setItem('alturaVentana', window.screen.height.toString()),
     this.activatedRoute.params.subscribe(params => {
       if (params["usuario"] != undefined){
-        console.log('constructor app 2');
-        console.log(params["usuario"]);
         localStorage.setItem("usuario", params["usuario"]);
         this.usuario = params["usuario"];
-        console.log('usuaario local ' + localStorage.getItem('usuario'));
-        console.log('usuaario app ' + this.usuario);
+        this.cabeceraService.changeMessage(this.usuario);
+        otrosService.getDatosSesion(params["usuario"]).subscribe(resp => {
+          this.cabeceraService.changeDatos(resp.datosSesion);
+        });
         otrosService.getPermisoAprobar(params["usuario"]).subscribe(resp => {
-          console.log('contador');
-          console.log(resp.length);
           let opcionAprobar: boolean = false;
           if (resp.respuesta.length > 0){
-            console.log(resp[0]);
             if (resp.respuesta[0].HABILITAR_OPCION == 'S' && resp.respuesta[0].HABILITAR_ROL == 'S'){
               opcionAprobar = true;
             }
@@ -40,14 +45,8 @@ export class AppComponent {
           }else{
             localStorage.setItem("aprobar", "N");
           }
-          //console.log(resp);
           this.router.navigate(['/actas']);
         });
-        
-      }else{
-        console.log('Borrando');
-        console.log('Borrando');
-        localStorage.clear();
       }
     });
   }

@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CabeceraService } from 'src/app/services/cabecera.service';
+
 
 @Component({
   selector: 'app-header',
@@ -7,23 +9,17 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  @Input() usuario: string;
+  usuario: string;
+  datosSesion: {};
   
-  //usuario : string;
-  constructor() {
-    //this.usuario = localStorage.getItem("usuario");
-    console.log('constructor header');
-    console.log('header usuario local ' + localStorage.getItem('usuario'));
-    console.log('header usuario app ' + this.usuario);
+  constructor(private cabeceraservice: CabeceraService) {
+
    }
 
   ngOnInit() {
+    this.cabeceraservice.currentMessage.subscribe(message => this.usuario = message)
+    this.cabeceraservice.currentDatos.subscribe(datos => this.datosSesion = datos);
     this.usuario = localStorage.getItem("usuario");
-    console.log('onInit header');
-    console.log('onInit usuario local ' + localStorage.getItem('usuario'));
-    console.log('onInit usuario app ' + this.usuario);
-
-    //this.usuario = localStorage.getItem('usuario');
   }
 
 }

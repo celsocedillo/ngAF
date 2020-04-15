@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IVwActa } from '../modelo/modelo';
+import { environment } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class ActasService {
     //this.apiUrl = "https://localhost:44311/api/Acta";
     //this.apiUrl = "http://localhost:3000/api/actas";
     //this.apiUrl = "http://localhost:5200/api/Acta";
-    this.apiUrl = "http://srvfrm:5200/api/Acta";
+    //this.apiUrl = "http://srvfrm:5200/api/Acta";
+    this.apiUrl = environment.apiUrl+'/Acta'
   }
 
   // getActas(): Observable<IVwActa[]> {

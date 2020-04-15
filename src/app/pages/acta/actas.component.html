@@ -66,5 +66,11 @@
 <p-overlayPanel #op [appendTo]="'body'">
   <!-- <p-listbox [options]="lestados" multiple="multiple" checkbox="checkbox"  optionLabel="label" (onChange)="dt.filter(($event.value.map(function(a){return a.value})), 'estado', 'in')">
   </p-listbox> -->
-  <p-multiSelect [options]="lestados" [overlayVisible]="true" [filter]="false" (onChange)="dt.filter($event.value, 'estado','in')"></p-multiSelect>
+  <p-multiSelect [options]="lestados" 
+                 [overlayVisible]="true" 
+                 [filter]="false" 
+                 (onChange)="dt.filter($event.value, 'estado','in')"
+                 [(ngModel)]="selectedFiltro"
+  >
+  </p-multiSelect>
 </p-overlayPanel>

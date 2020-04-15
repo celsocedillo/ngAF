@@ -52,7 +52,7 @@ export class ActaformComponent implements OnInit {
   lstActivosValidar : any[];
   xResultadoValidacion: string;
   actaAprobar: string;
-
+  tamanioScroll = 210;
 
 constructor(private activatedRoute: ActivatedRoute, 
             private actaservice: ActasService, 
@@ -65,7 +65,7 @@ constructor(private activatedRoute: ActivatedRoute,
             private focusMonitor: FocusMonitor,
             private confirmationService: ConfirmationService,              
             private domelem: ElementRef) {
-
+   
 }
 
 ngOnInit() {
@@ -83,7 +83,7 @@ ngOnInit() {
   });
 
 
-  this.otrosService.findEstadosSituacionByUsuario('ACARABAJO').subscribe(res =>   { 
+  this.otrosService.findEstadosSituacionByUsuario(localStorage.getItem('usuario')).subscribe(res =>   { 
     res.forEach(element =>  {
      this.lstEstadosSituacion.push({value: element.estadoOrigenId, name: element.EstadoOrigen.descripcion});
    });
@@ -117,6 +117,12 @@ configuraActa(){
         actaIdReferencia :null
       }
       this.frmActa.patchValue({estadoInicialId: this.acta.estadoInicialId, estadoFinalId : this.acta.estadoFinalId});
+      if (window.screen.height > 210){
+        console.log(this.modoEdicion);
+        if (this.modoEdicion) {this.tamanioScroll = window.screen.height - 560}
+        else {this.tamanioScroll = window.screen.height - 470};
+      }
+    
     }
   });
 }
@@ -175,7 +181,6 @@ grabar(){
         this.spinner.hide("spForm");
         this.messageService.clear();
         this.messageService.add({key: 'c', sticky: true, severity:'error', summary:'Error al grabar el acta', detail:error.error.error});
-
       });  
     }
     //Si es un registro nuevo, se hace un insert
@@ -267,6 +272,16 @@ validar(){
 }
 
 llenaDatos(){
+  if (this.acta.estado == "A") this.modoEdicion = false
+  else this.modoEdicion = true;
+
+  if (window.screen.height > 210){
+    console.log(this.modoEdicion);
+    if (this.modoEdicion) {this.tamanioScroll = window.screen.height - 560}
+    else {this.tamanioScroll = window.screen.height - 470};
+  }
+  console.log(this.tamanioScroll);
+
   var dp = new DatePipe('es-EC');
   var format = "yyyy-MM-dd";
   console.log(dp.transform(this.acta.fechaActa,format));
