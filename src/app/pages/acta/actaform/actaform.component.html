@@ -189,7 +189,8 @@
                         <label class="col-sm-2 col-form-label">Fecha acta</label>
                         <div class="col-sm-10">
                             <!-- <input type="date" class="form-control" formControlName="fechaActa"  [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}" > -->
-                            <p-calendar formControlName="fechaActa" placeholder="aaaa-mm-dd" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  inputStyleClass='form-control' dateFormat="yy-mm-dd" [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}"></p-calendar>
+                            <!-- <p-calendar formControlName="fechaActa" placeholder="aaaa-mm-dd" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  inputStyleClass='form-control' dateFormat="yy-mm-dd" [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}"></p-calendar> -->
+                            <p-calendar formControlName="fechaActa" placeholder="dd/mm/yy" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  inputStyleClass='form-control' dateFormat="dd-mm-yy" [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}"></p-calendar>
                             <div class="invalid-feedback" *ngIf="(frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && frmActa.get('fechaActa').errors">
                                 <div *ngIf="frmActa.get('fechaActa').errors.required">
                                 El campo fecha de acta es requerido, formato AAAA-MM-DD
@@ -370,7 +371,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-item >
-                        <tr [pSelectableRow]="item">
+                        <tr [pSelectableRow]="item" [ngClass]="item.estado == 'N' ?'old-car' : null">
                         <td style="width: 2em">
                             <p-tableCheckbox [value]="item"></p-tableCheckbox>
                         </td>
@@ -378,7 +379,7 @@
                         <td>{{((item.Activo.tipoActivo.length>20) ? (item.Activo.tipoActivo | slice:0:20)+"...": item.Activo.tipoActivo) | titlecase}}</td>
                         <td>{{((item.Activo.claseActivo.length>27) ? (item.Activo.claseActivo | slice:0:27)+"...": item.Activo.claseActivo) | titlecase}}</td>
                         <td>{{(((item.Activo.descripcion) ? item.Activo.descripcion.length>65 : "") ? (item.Activo.descripcion | slice:0:65)+"...": item.Activo.descripcion) | titlecase}}</td>
-                        <td style="text-align: right;">{{item.valorCompraIva | number :'0.2' }}</td>
+                        <td style="text-align: right;"  >{{item.valorCompraIva | number :'0.2' }}</td>
                         </tr>  
                     </ng-template>
                     <ng-template pTemplate="footer">

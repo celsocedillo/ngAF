@@ -37,8 +37,6 @@ export class ActasComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ventana size');
-    console.log(window.screen.height);
     //Buscar los estados de situacion habilitados para el usuario
     this.otrosService.findEstadosSituacionByUsuario(localStorage.getItem('usuario')).subscribe(res =>   { 
       res.forEach(element =>  {

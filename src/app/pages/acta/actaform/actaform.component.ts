@@ -225,6 +225,7 @@ validaActa(){
     this.dlgAprobar = true;
     if (resp.respuesta.implicitResults[0].length > 0){
       this.lstActivosValidar = resp.respuesta.implicitResults[0];
+      this.buscaActa(this.acta.id);
       this.xResultadoValidacion = "N";
     }else{
       this.xResultadoValidacion = "V";
@@ -276,24 +277,25 @@ llenaDatos(){
   else this.modoEdicion = true;
 
   if (window.screen.height > 210){
-    console.log(this.modoEdicion);
+
     if (this.modoEdicion) {this.tamanioScroll = window.screen.height - 560}
     else {this.tamanioScroll = window.screen.height - 470};
   }
-  console.log(this.tamanioScroll);
 
   var dp = new DatePipe('es-EC');
   var format = "yyyy-MM-dd";
-  console.log(dp.transform(this.acta.fechaActa,format));
+  //console.log(dp.transform(this.acta.fechaActa,format));
+  console.log(new Date(this.acta.fechaActa));
   this.frmActa.patchValue({
     id: this.acta.id,
     numeroActa: this.acta.numeroActa,
-    fechaActa: dp.transform(this.acta.fechaActa,format),
+    //fechaActa: dp.transform(this.acta.fechaActa,format),
+    //fechaActa: dp.transform(this.acta.fechaActa,"dd/MM/yyyy"),
+    fechaActa: new Date(this.acta.fechaActa),
     comentarios: this.acta.comentarios,
     estadoInicialId: this.acta.estadoInicialId,
     estadoFinalId: this.acta.estadoFinalId
   });
-  console.log(this.frmActa);
 }
 
 showDialog() {
