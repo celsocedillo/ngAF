@@ -53,6 +53,7 @@ export class ActaformComponent implements OnInit {
   xResultadoValidacion: string;
   actaAprobar: string;
   tamanioScroll = 210;
+  es: any;
 
 constructor(private activatedRoute: ActivatedRoute, 
             private actaservice: ActasService, 
@@ -69,6 +70,17 @@ constructor(private activatedRoute: ActivatedRoute,
 }
 
 ngOnInit() {
+
+  this.es = {
+    firstDayOfWeek: 1,
+    dayNames: [ "domingo","lunes","martes","miércoles","jueves","viernes","sábado" ],
+    dayNamesShort: [ "dom","lun","mar","mié","jue","vie","sáb" ],
+    dayNamesMin: [ "Dom","Lun","Mar","Mie","Jue","Vie","Sab" ],
+    monthNames: [ "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre" ],
+    monthNamesShort: [ "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic" ],
+    today: 'Hoy',
+    clear: 'Borrar'
+}
 
   this.actaAprobar = localStorage.getItem('aprobar');
 

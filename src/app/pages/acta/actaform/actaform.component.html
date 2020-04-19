@@ -106,7 +106,7 @@
         <h6>Acta</h6>
     </div>
     <!-- <form id="frmActa" [formGroup]="frmActa" (ngSubmit)="grabar()" novalidate="novalidate" class="form-horizontal">         -->
-    <form id="frmActa" [formGroup]="frmActa" novalidate="novalidate" class="form-horizontal">        
+    <form id="frmActa" [formGroup]="frmActa" novalidate="novalidate" class="form-horizontal" (keydown.enter)="$event.preventDefault()">        
     <div class="card-body">
             <div class="row" *ngIf="acta?.estado === 'A'">
                 <div class="col-md-8"> 
@@ -190,7 +190,7 @@
                         <div class="col-sm-10">
                             <!-- <input type="date" class="form-control" formControlName="fechaActa"  [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}" > -->
                             <!-- <p-calendar formControlName="fechaActa" placeholder="aaaa-mm-dd" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  inputStyleClass='form-control' dateFormat="yy-mm-dd" [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}"></p-calendar> -->
-                            <p-calendar formControlName="fechaActa" placeholder="dd/mm/yy" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  inputStyleClass='form-control' dateFormat="dd-mm-yy" [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}"></p-calendar>
+                            <p-calendar formControlName="fechaActa" placeholder="dd-mm-aaaa" [locale]="es"  [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  inputStyleClass='form-control' dateFormat="dd-mm-yy" [ngClass]="{'is-invalid': (frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && !frmActa.get('fechaActa').valid}"></p-calendar>
                             <div class="invalid-feedback" *ngIf="(frmActa.get('fechaActa').touched || frmActa.get('fechaActa').dirty) && frmActa.get('fechaActa').errors">
                                 <div *ngIf="frmActa.get('fechaActa').errors.required">
                                 El campo fecha de acta es requerido, formato AAAA-MM-DD
