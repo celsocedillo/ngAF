@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://srvfrm:4000/api'
+  apiUrl: 'http://srvfrm:5200/api'
 };
