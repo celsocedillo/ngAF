@@ -16,6 +16,7 @@ import { ActasService } from './services/actas.service';
 import { VwactivosService } from './services/vwactivos.service';
 import { OtrosService } from './services/otros.service';
 import { CabeceraService } from './services/cabecera.service';
+import { ArchivomigracionService } from './services/archivomigracion.service';
 
 import { MomentModule } from 'ngx-moment';
 import { TableModule } from 'primeng/table';
@@ -37,6 +38,8 @@ import { CalendarModule } from 'primeng/calendar';
 
 
 import { ActaformComponent } from './pages/acta/actaform/actaform.component';
+import { ArchivoComponent } from './pages/archivoMigracion/archivo.component';
+import { ArchivoformComponent } from './pages/archivoMigracion/archivoform/archivoform.component';
 
 registerLocaleData(es, 'es-EC');
 
@@ -45,7 +48,9 @@ registerLocaleData(es, 'es-EC');
     AppComponent,
     HeaderComponent,
     ActasComponent,
-    ActaformComponent
+    ActaformComponent,
+    ArchivoComponent,
+    ArchivoformComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +80,7 @@ registerLocaleData(es, 'es-EC');
     ActasService,
     VwactivosService,
     OtrosService,
+    ArchivomigracionService,
     CabeceraService,
     MessageService,
     ConfirmationService,
