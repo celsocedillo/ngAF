@@ -25,7 +25,6 @@ export class ArchivoComponent implements OnInit {
 
   buscarArchivos(){
     this.spinner.show();
-    console.log('buscando');
     this.archivoService.getArchivosMigracion().subscribe(archivos => { 
       this.lista = archivos; 
       console.log(this.lista);
