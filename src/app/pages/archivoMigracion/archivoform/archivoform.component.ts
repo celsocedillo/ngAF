@@ -18,6 +18,7 @@ export class ArchivoformComponent implements OnInit {
   tamanioScroll = 210;
   modoEdicion :boolean = true;
   rowGroupMetadata: any;
+  activoSeleccionado: any;
 
 
   constructor(private activatedRoute: ActivatedRoute, 
@@ -34,7 +35,7 @@ export class ArchivoformComponent implements OnInit {
         this.modoEdicion = false;
         if (window.screen.height > 210){
           if (this.modoEdicion) {this.tamanioScroll = window.screen.height - 560}
-          else {this.tamanioScroll = window.screen.height - 400};
+          else {this.tamanioScroll = window.screen.height - 460};
         }
         console.log('tamanio :' + this.tamanioScroll);
         this.buscaArchivo(this.id);  
