@@ -106,31 +106,33 @@
                             <th style="width: 2em">
                                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                             </th>
-                            <th width=75px>Codigo</th>
-                            <th width=180px>Subgrupo</th>
-                            <th width=200px>Clasificacion</th>
-                            <th width=400px>Activo</th>
-                            <th width=90px>FechaCompra</th>
-                            <th width=150px>TipoActivoEma</th>
-                            <th width=150px>ClaseActivoEma</th>
-                            <th width=90px style="text-align: right;">Valor</th>
+                            <th style="width: 5em">Codigo</th>
+                            <th style="width: 15em">Subgrupo</th>
+                            <th style="width: 15em">Clasificacion</th>
+                            <th >Activo</th>
+                            <th style="width: 7em">FecCompra</th>
+                            <th >TipoActivoEma</th>
+                            <th >ClaseActivoEma</th>
+                            <th style="width: 10em; text-align: right;">Valor</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" >
                             <tr *ngIf="rowGroupMetadata[rowData.subGrupo].index === rowIndex" [style.background-color]="'#eaeaea'">
                                 <td style="width: 2em" ></td>
-                                <td colspan="3" [style.background-color]="'#eaeaea'">
+                                <td style="width: 5em"></td>
+                                <td colspan="2" style="width: 30em" [style.background-color]="'#eaeaea'">
                                     <a href="#" [pRowToggler]="rowData" >
                                         <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'"  style="vertical-align: middle;padding-bottom: .1em;"></i>
                                         <span>{{rowData.subGrupo}}</span>
                                     </a>
                                 </td>
-                                <td style="text-align: right;" width=200px>
+                                <td style="text-align: right;">
                                 <span style="font-weight: bold"> {{rowGroupMetadata[rowData.subGrupo].size}}</span>
                                 </td>
-                                <td></td>
-                                <td></td>
-                                <td style="text-align: right;">
+                                <td style="width: 7em"></td>
+                                <td ></td>
+                                <td ></td>
+                                <td style="width: 10em; text-align: right;">
                                     <span style="font-weight: bold"> {{rowGroupMetadata[rowData.subGrupo].valor  | number :'0.2' }}</span>
                                 </td>
                             </tr>
@@ -140,25 +142,28 @@
                             <td style="width: 2em">
                                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                             </td>
-                            <td style="width: 75px">{{rowData.interagua}}</td>
-                            <td width=180px>{{rowData.subGrupo | titlecase}}</td>
-                            <td width=200px>{{rowData.clasificacion | titlecase}}</td>
-                            <td width=400px>{{rowData.activo | titlecase}}</td>
-                            <td width=90px>{{rowData.fechaCompra | date : 'dd/MM/yyyy'}}</td>
-                            <td width=150px>{{rowData.TipoAct?.descripcion | titlecase}}</td>
-                            <td width=150px>{{rowData.ClaseAct?.descripcion | titlecase}}</td>
-                            <td width=90px style="text-align: right;">{{rowData.valorCompra | number :'0.2' }}</td>
+                            <td style="width: 5em">{{rowData.interagua}}</td>
+                            <td style="width: 15em">{{rowData.subGrupo | titlecase}}</td>
+                            <td style="width: 15em">{{rowData.clasificacion | titlecase}}</td>
+                            <td >{{rowData.activo | titlecase}}</td>
+                            <td style="width: 6em">{{rowData.fechaCompra | date : 'dd/MM/yyyy'}}</td>
+                            <td ><span style="color: green">{{rowData.TipoAct?.descripcion | titlecase}}</span></td>
+                            <td ><span style="color: green">{{rowData.ClaseAct?.descripcion | titlecase}}</span></td>
+                            <td style="width: 10em; text-align: right;">{{rowData.valorCompra | number :'0.2' }}</td>
                             </tr>  
                         </ng-template>
                         <ng-template pTemplate="footer">
                             <tr>
-                                <td style="width: 2em"></td>
-                                <td colspan="3">
+                                <td style="width: 2em" ></td>
+                                <td style="width: 5em"></td>  
+                                <td style="width: 30em" colspan="2">
                                     # de activos 
                                 </td>
                                 <td style="text-align: right;"> {{archivo?.numeroActivos}}</td>
-                                <td style="text-align: right;">Total</td>
-                                <td style="text-align: right;">{{archivo?.totalActivos | number :'0.2' }}</td>
+                                <td style="width: 7em"></td>
+                                <td ></td>
+                                <td >Total</td>
+                                <td style="width: 10em; text-align: right;">{{archivo?.totalActivos | number :'0.2' }}</td>
                             </tr>
                         </ng-template>
                         </p-table>
