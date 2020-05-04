@@ -1,7 +1,76 @@
 <ngx-spinner name="spForm" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium" >
     <p class="loading">Cargando datos...</p>
 </ngx-spinner>
-    
+
+<p-dialog header="Activo" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">CodInteragua</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.interagua}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">SubGrupo</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.subGrupo}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Clasificacion</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.clasificacion}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Activo</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.activo}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Caracteristicas</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.caracteristicas}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Marca</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.marca}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Modelo</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.modelo}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Serie</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.serie}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Custodio</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.custodio}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">Condicion</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.condicion}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">FecCompra</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.fechaCompra}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">valorCompra</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.valorCompra}}>
+                </div>   
+                <label class="col-sm-2 col-form-label">TipoActivo</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.TipoAct?.descripcion}}>
+                </div>                        
+                <label class="col-sm-2 col-form-label">ClaseActivo</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.ClaseAct?.descripcion}}>
+                </div>                        
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="displayModal=false" label="Yes"></button>
+        <button type="button" pButton icon="pi pi-times" (click)="displayModal=false" label="No" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>
 
 <div class="card">
   <div class="card-header">
@@ -143,7 +212,11 @@
                                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                             </td>
                             <td style="width: 5em">{{rowData.interagua}}</td>
-                            <td style="width: 15em">{{rowData.subGrupo | titlecase}}</td>
+                            <td style="width: 15em">
+                                <a [routerLink]="" (click)="verActivo(rowData)">
+                                    {{rowData.subGrupo | titlecase}}
+                                </a>
+                            </td>
                             <td style="width: 15em">{{rowData.clasificacion | titlecase}}</td>
                             <td >{{rowData.activo | titlecase}}</td>
                             <td style="width: 6em">{{rowData.fechaCompra | date : 'dd/MM/yyyy'}}</td>

@@ -19,7 +19,8 @@ export class ArchivoformComponent implements OnInit {
   modoEdicion :boolean = true;
   rowGroupMetadata: any;
   activoSeleccionado: any;
-
+  displayModal :boolean = false;
+  vistaActivo: any;
 
   constructor(private activatedRoute: ActivatedRoute, 
               private router: Router,
@@ -85,6 +86,12 @@ export class ArchivoformComponent implements OnInit {
             }
         }
     }
-}
+  }
   
+  verActivo(activo){
+    console.log(activo);
+    this.displayModal = true;
+    this.vistaActivo = activo;
+  }
+
 }
