@@ -4,6 +4,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { ArchivomigracionService } from '../../../services/archivomigracion.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { VwactivosService } from 'src/app/services/vwactivos.service';
 
 @Component({
   selector: 'app-archivoform',
@@ -21,11 +22,13 @@ export class ArchivoformComponent implements OnInit {
   activoSeleccionado: any;
   displayModal :boolean = false;
   vistaActivo: any;
+  activoEma: any[] = [];
 
   constructor(private activatedRoute: ActivatedRoute, 
               private router: Router,
               private archivoService: ArchivomigracionService,
-              private spinner: NgxSpinnerService  ) { 
+              private spinner: NgxSpinnerService,
+              private activoService: VwactivosService  ) { 
 
   }
 
@@ -46,6 +49,7 @@ export class ArchivoformComponent implements OnInit {
 
 
   buscaArchivo(id){
+    
     this.spinner.show("spForm");
     console.log('spiner');
     this.archivoService.getArchivo(id).subscribe(archivo => {
@@ -89,9 +93,15 @@ export class ArchivoformComponent implements OnInit {
   }
   
   verActivo(activo){
+    this.activoEma = [];
     console.log(activo);
-    this.displayModal = true;
-    this.vistaActivo = activo;
+    this.activoService.getActivoById(activo.activoId).subscribe(activoEma => {
+      console.log('activoEma', activoEma);
+      this.activoEma.push(activoEma);
+      this.displayModal = true;
+      this.vistaActivo = activo;
+  
+    });
   }
 
 }

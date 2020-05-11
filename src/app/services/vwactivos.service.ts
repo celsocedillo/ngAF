@@ -23,4 +23,8 @@ export class VwactivosService {
     return this.http.get<any>(this.apiUrl + '/ActivoByFiltroCodigo/' + buscar, {params});
   }
 
+  getActivoById(id: number):Observable<any>{
+    return this.http.get<any>(this.apiUrl + '/ActivoById/' + id);
+  }
+
 }

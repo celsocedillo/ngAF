@@ -2,7 +2,7 @@
     <p class="loading">Cargando datos...</p>
 </ngx-spinner>
 
-<p-dialog header="Activo" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+<p-dialog header="Activo a migrar" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
     [draggable]="false" [resizable]="false">
     <div class="row">
         <div class="col-sm-12">
@@ -49,7 +49,7 @@
                 </div>                        
                 <label class="col-sm-2 col-form-label">FecCompra</label>
                 <div class="col-sm-10">
-                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.fechaCompra}}>
+                    <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.fechaCompra|date}}/>
                 </div>                        
                 <label class="col-sm-2 col-form-label">valorCompra</label>
                 <div class="col-sm-10">
@@ -64,11 +64,35 @@
                     <input type="text" readonly class="form-control-plaintext"  value={{vistaActivo?.ClaseAct?.descripcion}}>
                 </div>                        
             </div>
+            <p-table [value]="activoEma">
+                <ng-template pTemplate="caption">
+                    Activo Emapag
+                </ng-template>                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 5em">CodEma</th>
+                        <th>Tipo</th>
+                        <th>Clase</th>
+                        <th style="width: 8em">FechaCompra</th>
+                        <th style="width: 10em; text-align: right;">ValorCompra</th>
+                        <th>Situacion</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData>
+                        <tr>
+                            <td style="width: 2em">{{rowData.codEcapag}}</td>
+                            <td>{{rowData.tipoActivo}}</td>
+                            <td>{{rowData.claseActivo}}</td>
+                            <td>{{rowData.fechaIngreso |  date : 'dd/MM/yyyy'}}</td>
+                            <td style="width: 10em; text-align: right;">{{rowData.valorCompra | number :'0.2' }}</td>
+                            <td>{{rowData.estadoSituacion}}</td>
+                        </tr>
+                </ng-template>                
+            </p-table>
         </div>
     </div>
     <p-footer>
-        <button type="button" pButton icon="pi pi-check" (click)="displayModal=false" label="Yes"></button>
-        <button type="button" pButton icon="pi pi-times" (click)="displayModal=false" label="No" class="ui-button-secondary"></button>
+        <button type="button" pButton icon="pi pi-times" (click)="displayModal=false" label="Cerrar" class="ui-button-secondary"></button>
     </p-footer>
 </p-dialog>
 
