@@ -52,52 +52,6 @@
     </ng-template>
 </p-toast>
 <p-toast [style]="{marginTop: '26px'}"></p-toast>
-<!-- <p-dialog header="Titulo" [(visible)]="display" modal="true" [style]="{width: '800px', height: '500px'}">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Busqueda por codigo" aria-label="Recipient's username" aria-describedby="basic-addon2" (keyup.enter)="buscarCoincidencias(textoBuscar.value)" (keydown)="bajar($event)" #textoBuscar (focus)="onFocus()" autofocus>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary btn-sm" type="button" (click)='buscarCoincidencias(textoBuscar.value)'><i class="fa fa-search"></i></button>
-        </div>
-        <ngx-spinner name="spBusqueda" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium" >
-            <p class="loading">Cargando datos...</p>
-        </ngx-spinner>
-        <div  #da >        
-            <p-table #tact [value]="lActivosCoincidencia" id="tAct"   
-            [showLoader]="true" 
-            [rowHover]="true" 
-            [scrollable]="true"
-            selectionMode="single"
-            [(selection)]="activoSeleccionado"
-            (onRowSelect)="onSelect($event)"
-            scrollHeight="250px"
-            class="mt-3 tabRefe"  >
-   <ng-template pTemplate="header">
-     <tr>
-       <th width=75px> Cod.Ema </th>
-       <th width=75x> Cod.Conc </th>
-       <th width=75px> Cod.Contr  </th>
-       <th>Tipo/Clase</th>
-       <th>Activo</th>
-     </tr>
-   </ng-template>
-   <ng-template pTemplate="body" let-item >
-     <tr [pSelectableRow]="item">
-       <td>{{item.codigoEcapag}}</td>
-       <td>{{item.codigoConcesionaria}}</td>
-       <td>{{item.codigoActivoControl}}</td>
-       <td>{{((item.Activo.tipoActivo.length>20) ? (item.Activo.tipoActivo | slice:0:20)+"...": item.Activo.tipoActivo) | titlecase}} -
-           {{((item.Activo.claseActivo.length>27) ? (item.Activo.claseActivo | slice:0:27)+"...": item.Activo.claseActivo) | titlecase}}
-       </td>
-       <td>{{(((item.Activo.descripcion) ? item.Activo.descripcion.length>65 : "") ? (item.Activo.descripcion | slice:0:65)+"...": item.Activo.descripcion) | titlecase}}</td>
-     </tr>  
-   </ng-template>
- </p-table>
-</div>
-</div>
-
-</p-dialog>
- -->
- <!-- <p-messages [(value)]="msgs"></p-messages> -->
 <ngx-spinner name="spForm" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium" >
     <p class="loading">Cargando datos...</p>
 </ngx-spinner>
@@ -105,7 +59,6 @@
     <div class="card-header">
         <h6>Acta</h6>
     </div>
-    <!-- <form id="frmActa" [formGroup]="frmActa" (ngSubmit)="grabar()" novalidate="novalidate" class="form-horizontal">         -->
     <form id="frmActa" [formGroup]="frmActa" novalidate="novalidate" class="form-horizontal" (keydown.enter)="$event.preventDefault()">        
     <div class="card-body">
             <div class="row" *ngIf="acta?.estado === 'A'">
@@ -294,7 +247,6 @@
                 </div>
             </div>
             <!--Fin Botones-->
-
     </div>
     </form>
 </div>

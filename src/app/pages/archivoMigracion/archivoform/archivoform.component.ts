@@ -5,6 +5,11 @@ import { ArchivomigracionService } from '../../../services/archivomigracion.serv
 
 import { NgxSpinnerService } from "ngx-spinner";
 import { VwactivosService } from 'src/app/services/vwactivos.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { MessageService, ConfirmationService } from 'primeng/api';
+
+
 
 @Component({
   selector: 'app-archivoform',
@@ -13,11 +18,11 @@ import { VwactivosService } from 'src/app/services/vwactivos.service';
 })
 export class ArchivoformComponent implements OnInit {
 
-
+  frmArchivo : FormGroup;
   archivo: any;
   id: number;
   tamanioScroll = 210;
-  modoEdicion :boolean = true;
+  modoEdicion :boolean = false;
   rowGroupMetadata: any;
   activoSeleccionado: any;
   displayModal :boolean = false;
@@ -27,12 +32,22 @@ export class ArchivoformComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, 
               private router: Router,
               private archivoService: ArchivomigracionService,
+              private messageService: MessageService,
               private spinner: NgxSpinnerService,
+              private confirmationService: ConfirmationService,              
               private activoService: VwactivosService  ) { 
 
   }
 
   ngOnInit() {
+
+    this.frmArchivo = new FormGroup({
+      id: new FormControl(),
+      archivo: new FormControl('', Validators.required),
+      observacion :new FormControl('', Validators.required)
+      //migrado: new FormControl()
+    });
+  
     this.activatedRoute.params.subscribe(params => {
       if (params["id"] != undefined){
         this.id = params.id;
@@ -41,23 +56,36 @@ export class ArchivoformComponent implements OnInit {
           if (this.modoEdicion) {this.tamanioScroll = window.screen.height - 560}
           else {this.tamanioScroll = window.screen.height - 460};
         }
-        console.log('tamanio :' + this.tamanioScroll);
         this.buscaArchivo(this.id);  
+      }else{
+        this.archivo = {
+          archivoId : null,
+          archivo: null,
+          fechaIngreso: new Date(),
+          observacion: '',
+          migrado: 'N',
+          usuarioIngreso: 'CCEDILLO',
+          totalActivos : 0,
+          numeroAtivos: 0
+        }
+        this.frmArchivo.patchValue({fechaIngreso: this.archivo.fechaIngreso});
       }
     });
   }
 
-
   buscaArchivo(id){
-    
     this.spinner.show("spForm");
-    console.log('spiner');
     this.archivoService.getArchivo(id).subscribe(archivo => {
       this.archivo = archivo;
+      if (this.archivo.migrado == 'N') this.modoEdicion = true;
+      this.frmArchivo.patchValue({
+        id: this.archivo.id,
+        archivo: this.archivo.archivo,
+        observacion: this.archivo.observacion,
+        migrado: this.archivo.migrado        
+      });
       this.updateRowGroupMetaData();
-      console.log(this.rowGroupMetadata);
       this.spinner.hide("spForm");
-      console.log('spiner off');
     });
 
   }
@@ -94,14 +122,107 @@ export class ArchivoformComponent implements OnInit {
   
   verActivo(activo){
     this.activoEma = [];
-    console.log(activo);
-    this.activoService.getActivoById(activo.activoId).subscribe(activoEma => {
-      console.log('activoEma', activoEma);
-      this.activoEma.push(activoEma);
-      this.displayModal = true;
-      this.vistaActivo = activo;
+    if (activo.activoId){
+      this.activoService.getActivoById(activo.activoId).subscribe(activoEma => {
+        this.activoEma.push(activoEma);
+      });
+    }
+    this.displayModal = true;
+    this.vistaActivo = activo;
+
+  }
+
+  grabar(){
+         
+      let registro = {
+        id : this.frmArchivo.get('id').value,
+        archivo : this.frmArchivo.get('archivo').value,
+        fechaIngreso: this.archivo.fechaIngreso,
+        observacion : this.frmArchivo.get('observacion').value,
+        usuarioIngreso: this.archivo.usuarioIngreso,
+        migrado: this.archivo.migrado
+      }
+      //Si se esta editando un registro existente, entonces se hace un update
+      this.spinner.show("spForm");
+      if (this.modoEdicion){
+        this.archivoService.updateArchivoMigracion(registro).subscribe(resp => {
+          this.messageService.add({severity:'info', summary: 'Grabar', detail:'Datos grabados', life: 12000});
+          this.spinner.hide("spForm");
+        },
+        error => {
+          console.log('Error en update => ');
+          console.log(error.error); 
+          this.spinner.hide("spForm");
+          this.messageService.clear();
+          this.messageService.add({key: 'c', sticky: true, severity:'error', summary:'Error al grabar el acta', detail:error.error.error});
+        });  
+      }
+      //Si es un registro nuevo, se hace un insert
+      else{
+        this.archivoService.insertaArchivoMigracion(registro).subscribe(resp => {
+          this.modoEdicion = true;
+          this.messageService.add({severity:'info', summary: 'Grabar', detail:'Datos grabados', life: 12000});
+          this.archivo = resp.archivo;
+          console.log('grabado', this.archivo);
+          this.frmArchivo.patchValue({id: this.archivo.id});
+          this.spinner.hide("spForm");
+        },
+        error => {
+          //console.log('Error en insert archivo HJ => ');
+          console.log(error.error.error); 
+          this.spinner.hide("spForm");
+          this.messageService.clear();
+          this.messageService.add({key: 'c', sticky: true, severity:'error', summary:'Error al crear el acta de archivo', detail:error.error.error});
+        });
+       
+      }
+    
   
+  }
+  
+  eliminarGrupo(pgrupo){
+    this.confirmationService.confirm({
+        message: 'Seguro desea eliminar los activos del grupo ' + pgrupo,
+        accept: () =>{
+          this.spinner.show("spForm");
+          const data = {
+            id: this.archivo.id,
+            subGrupo: pgrupo,
+            size: this.rowGroupMetadata[pgrupo].size,
+            valor: this.rowGroupMetadata[pgrupo].valor,
+            numeroActivos: this.archivo.numeroActivos,
+            totalActivos: this.archivo.totalActivos
+          }
+
+          this.archivoService.eliminarGrupo(data).subscribe(resp =>{
+            this.archivo.Detalle = this.archivo.Detalle.filter(borrar => borrar.subGrupo !== pgrupo);
+            this.archivo.numeroActivos-=this.rowGroupMetadata[pgrupo].size;
+            this.archivo.totalActivos-=this.rowGroupMetadata[pgrupo].valor;
+            this.updateRowGroupMetaData();
+            this.spinner.hide("spForm");
+          }, 
+            error => {
+              console.log(error.error.error); 
+              this.spinner.hide("spForm");
+              this.messageService.clear();
+              this.messageService.add({key: 'c', sticky: true, severity:'error', summary:'Error al eliminar el grupo de activos', detail:error.error.error});
+    
+          });
+/*           for  (let item of this.activosSeleccionados ){
+            if (item.estado === "A" || item.estado === 'N' || item.estado === 'C') {
+              item.estado = 'X';
+               this.listaActivosBorrar.push(item);
+            }
+            this.acta.Detalle = this.acta.Detalle.filter(borrar => borrar.activoId !== item.activoId);
+            this.acta.numeroActivos--;
+            console.log(item);
+            this.acta.totalValor -= (item.valorCompraIva );
+          }
+          console.log(this.listaActivosBorrar);
+          this.activosSeleccionados = [];
+ */        }
     });
+    
   }
 
 }

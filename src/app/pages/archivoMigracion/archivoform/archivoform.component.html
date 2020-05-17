@@ -1,3 +1,19 @@
+<p-confirmDialog header="Eliminar activo" icon="pi pi-exclamation-triangle" [style]="{width: '50vw'}" acceptLabel="Si" rejectLabel="No"></p-confirmDialog>
+
+<p-toast [style]="{width: '600px'}" position="center" key="c" [modal]="true" [baseZIndex]="5000">
+        <ng-template let-message pTemplate="message">
+            <div style="text-align: center">
+                <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+                <h5>{{message.summary}}</h5>
+                <p>{{message.detail}}</p>
+            </div>
+           
+        </ng-template>
+    </p-toast>
+    
+
+<p-toast [style]="{marginTop: '26px'}"></p-toast>
+
 <ngx-spinner name="spForm" [fullScreen]="false" type="ball-clip-rotate-multiple" size="medium" >
     <p class="loading">Cargando datos...</p>
 </ngx-spinner>
@@ -100,6 +116,7 @@
   <div class="card-header">
     <h6>Archivo</h6>
   </div>
+  <form id="frmActa" [formGroup]="frmArchivo" novalidate="novalidate" class="form-horizontal" (keydown.enter)="$event.preventDefault()">        
   <div class="card-body">
       <div class="row" *ngIf="archivo?.migrado === 'S'">
           <div class="col-md-8">
@@ -158,12 +175,79 @@
             </div>
 
       </div>
+      <div class="row" *ngIf="archivo?.migrado === 'N'">
+            <div class="col-md-8">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Id</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly class="form-control-plaintext"  value={{archivo.id}}>
+                    </div>                        
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Archivo </label>
+                    <div class="col-sm-10">
+                            <input type="text"  class="form-control" maxlength="25" formControlName="archivo" [ngClass]="{'is-invalid': (frmArchivo.get('archivo').touched || frmArchivo.get('archivo').dirty) && !frmArchivo.get('archivo').valid}" >
+                            <div class="invalid-feedback" *ngIf="(frmArchivo.get('archivo').touched || frmArchivo.get('archivo').dirty) && frmArchivo.get('archivo').errors">
+                                <div *ngIf="frmArchivo.get('archivo').errors.required">
+                                    El campo archivo de acta es requerido
+                                </div>
+                            </div>                                             
+                    </div>
+                </div>
+                <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Fecha </label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext"  [value]="archivo.fechaIngreso | date : 'dd/MM/yyyy'">
+                        </div>                        
+                </div>
+                <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Observacion</label>
+                        <div class="col-sm-10">
+                            <textarea  class="form-control" maxlength="250"  formControlName="observacion" [ngClass]="{'is-invalid': (frmArchivo.get('observacion').touched || frmArchivo.get('observacion').dirty) && !frmArchivo.get('observacion').valid}"></textarea>
+                            <div class="invalid-feedback" *ngIf="(frmArchivo.get('observacion').touched || frmArchivo.get('observacion').dirty) && frmArchivo.get('observacion').errors">
+                                <div *ngIf="frmArchivo.get('observacion').errors.required">
+                                El campo observacion es requerido
+                                </div>
+                            </div>
+                        </div>                        
+                </div>
+            </div>
+            <div class="col-md-4">
+                  <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Creado por: </label>
+                      <div class="col-sm-8">
+                          <input type="text" readonly class="form-control-plaintext"  [value]="archivo.usuarioIngreso">
+                      </div>                        
+                  </div>
+                  <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Aprobado</label>
+                      <div class="col-sm-8">
+                          <input type="text" readonly class="form-control-plaintext"  [value]="archivo.fechaAprueba | date : 'dd/MM/yyyy'">
+                      </div>                        
+                  </div>
+                  <div class="form-group row">
+                      <label class="col-sm-4 col-form-label">Por</label>
+                      <div class="col-sm-8">
+                          <input type="text" readonly class="form-control-plaintext"  value={{archivo.usuarioAprueba}}>
+                      </div>                        
+                  </div>
+            </div>
+      </div>
+  
   </div>  
   <div class="card-footer">
       <div class="row">
           <div class="col-md-8">
               <div class="form-group row mt-1">
                   <div class="col-md-6 pull-right">
+                        <button class="btn btn-outline-primary " 
+                        (click)="grabar()"
+                        *ngIf="archivo?.migrado == 'N'"
+                        [disabled]="!frmArchivo.valid"
+                         >
+                            <i class="fa fa-save"></i>
+                            Grabar
+                        </button>
                         <button class="btn btn-outline-secondary " (click)="cancelar()">
                                 <i class="fa fa-long-arrow-left"></i>
                                 Cancelar
@@ -177,6 +261,7 @@
 
       </div>
   </div>
+  </form>
 </div>
 
 <div class="card">
@@ -212,7 +297,11 @@
                         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" >
                             <tr *ngIf="rowGroupMetadata[rowData.subGrupo].index === rowIndex" [style.background-color]="'#eaeaea'">
                                 <td style="width: 2em" ></td>
-                                <td style="width: 5em"></td>
+                                <td style="width: 5em; text-align: center" >
+                                    <a [routerLink]=""  *ngIf="archivo?.migrado === 'N'" (click)="eliminarGrupo(rowData.subGrupo)">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
                                 <td colspan="2" style="width: 30em" [style.background-color]="'#eaeaea'">
                                     <a href="#" [pRowToggler]="rowData" >
                                         <i [ngClass]="expanded ? 'pi pi-fw pi-chevron-circle-down' : 'pi pi-fw pi-chevron-circle-right'"  style="vertical-align: middle;padding-bottom: .1em;"></i>
@@ -231,7 +320,7 @@
                             </tr>
                         </ng-template>                        
                         <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex" >
-                            <tr [pSelectableRow]="rowData">
+                            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                             <td style="width: 2em">
                                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                             </td>
@@ -263,8 +352,7 @@
                                 <td style="width: 10em; text-align: right;">{{archivo?.totalActivos | number :'0.2' }}</td>
                             </tr>
                         </ng-template>
-                        </p-table>
-    
+                    </p-table>
             </div>
 
         </div>

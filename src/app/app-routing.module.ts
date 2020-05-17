@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: 'acta', component: ActaformComponent},
   { path: 'acta/:id', component: ActaformComponent },
   { path: 'archivos', component: ArchivoComponent },
+  { path: 'archivo', component: ArchivoformComponent },
   { path: 'archivo/:id', component: ArchivoformComponent }
 ];
 

@@ -27,7 +27,6 @@ export class ArchivoComponent implements OnInit {
     this.spinner.show();
     this.archivoService.getArchivosMigracion().subscribe(archivos => { 
       this.lista = archivos; 
-      console.log(this.lista);
       this.spinner.hide(); 
       //this.dt.filter('I', 'estado','in')
     },
