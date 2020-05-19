@@ -38,4 +38,9 @@ export class ArchivomigracionService {
     return this.http.put<any>(this.apiUrl+'/eliminarGrupo', pdata);
   }
 
+  eliminarActivos(pdata): Observable<any>{
+    return this.http.put<any>(this.apiUrl+'/eliminarActivos', pdata);
+  }
+
+
 }

@@ -269,6 +269,13 @@
         <h6>Lista de activos</h6>
     </div>
     <div class="card-body">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="(archivo?.migrado === 'N') && modoEdicion">
+                <div class="col-sm-4">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <button class="btn btn-outline-light btn-sm" (click)="eliminarActivos(false)"><i class="fa fa-trash"></i> Eliminar activo</button>
+                    </div>
+                </div>
+        </nav>
         <div class="row">
             <div class="col-sm-12">
                     <p-table #dt [value]="archivo?.Detalle"   
@@ -282,7 +289,10 @@
                         <ng-template pTemplate="header">
                             <tr>
                             <th style="width: 2em">
-                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
+                                <a [routerLink]=""  *ngIf="archivo?.migrado === 'N'" (click)="eliminarActivos(true)" pTooltip="Borrar todos los activos">
+                                        <i class="fa fa-trash"></i>
+                                </a>
                             </th>
                             <th style="width: 5em">Codigo</th>
                             <th style="width: 15em">Subgrupo</th>
@@ -298,7 +308,7 @@
                             <tr *ngIf="rowGroupMetadata[rowData.subGrupo].index === rowIndex" [style.background-color]="'#eaeaea'">
                                 <td style="width: 2em" ></td>
                                 <td style="width: 5em; text-align: center" >
-                                    <a [routerLink]=""  *ngIf="archivo?.migrado === 'N'" (click)="eliminarGrupo(rowData.subGrupo)">
+                                    <a [routerLink]=""  *ngIf="archivo?.migrado === 'N'" (click)="eliminarGrupo(rowData.subGrupo)" pTooltip="Borrar los activos de este grupo">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </td>
@@ -322,7 +332,8 @@
                         <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex" >
                             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                             <td style="width: 2em">
-                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                <!-- <p-tableCheckbox [value]="rowData"></p-tableCheckbox> -->
+                                <input type="checkbox" (change)="onSelectCheck(rowData, $event.target.checked)">
                             </td>
                             <td style="width: 5em">{{rowData.interagua}}</td>
                             <td style="width: 15em">
@@ -356,6 +367,5 @@
             </div>
 
         </div>
-
     </div>
 </div>

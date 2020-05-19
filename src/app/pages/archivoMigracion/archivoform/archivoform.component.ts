@@ -8,6 +8,7 @@ import { VwactivosService } from 'src/app/services/vwactivos.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 
@@ -28,6 +29,7 @@ export class ArchivoformComponent implements OnInit {
   displayModal :boolean = false;
   vistaActivo: any;
   activoEma: any[] = [];
+  lstBorrar : any[] = [];
 
   constructor(private activatedRoute: ActivatedRoute, 
               private router: Router,
@@ -223,6 +225,91 @@ export class ArchivoformComponent implements OnInit {
  */        }
     });
     
+  }
+
+  eliminarActivos(ptodos: boolean){
+    
+    if (ptodos){
+      //Si queremos borrar todo
+      if (this.archivo.Detalle.length > 0){
+        this.confirmationService.confirm({
+          message: 'Seguro desea eliminar todos los activos',
+          accept: () =>{
+            this.spinner.show("spForm");
+            const data = {
+              todos: true,
+              id: this.archivo.id
+            }
+            debugger;
+            this.archivoService.eliminarActivos(data).subscribe(resp =>{
+              this.archivo.Detalle = [];
+              this.archivo.numeroActivos =0;
+              this.archivo.totalActivos =0;
+              this.updateRowGroupMetaData();
+              this.spinner.hide("spForm");
+            }, 
+              error => {
+                console.log(error.error.error); 
+                this.spinner.hide("spForm");
+                this.messageService.clear();
+                this.messageService.add({key: 'c', sticky: true, severity:'error', summary:'Error al eliminar el grupo de activos', detail:error.error.error});
+      
+            });
+         }
+        });
+      }
+    }else{      
+      //Solo borra activos seleccionados
+      if (this.lstBorrar.length > 0 ){
+        this.confirmationService.confirm({
+          message: 'Seguro desea eliminar activos seleccionados',
+          accept: () =>{
+            this.spinner.show("spForm");
+            const data = {
+              todos: false,
+              id: this.archivo.id,
+              lstActivos: this.lstBorrar
+            }
+            
+            this.archivoService.eliminarActivos(data).subscribe(resp =>{
+              //Actualizar los datos en la pantalla
+              let contActivos = 0;
+              let acumValor = 0;
+              //Borrando los activos de la tabla
+              this.lstBorrar.forEach(element => {
+                debugger;
+                this.archivo.Detalle = this.archivo.Detalle.filter(borrar => borrar.id !== element.id);
+                contActivos++;
+                acumValor+=element.valorCompra;
+              });
+              //Actualizando los totales
+              this.archivo.numeroActivos -=contActivos;
+              this.archivo.totalActivos -=acumValor;
+              this.lstBorrar = [];
+              this.updateRowGroupMetaData();
+              this.spinner.hide("spForm");
+            }, 
+              error => {
+                console.log(error.error.error); 
+                this.spinner.hide("spForm");
+                this.messageService.clear();
+                this.messageService.add({key: 'c', sticky: true, severity:'error', summary:'Error al eliminar el grupo de activos', detail:error.error.error});
+      
+            });
+         }
+        });
+      }
+    }
+  }
+
+  onSelectCheck(pactivo, pselected){
+    
+    if (pselected) {
+      this.lstBorrar.push(pactivo);
+    }else{
+      this.lstBorrar = this.lstBorrar.filter(borrar => borrar.id !== pactivo.id);
+    }
+    console.log('Lista ', this.lstBorrar );
   }
 
 }

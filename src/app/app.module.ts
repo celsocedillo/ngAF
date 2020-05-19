@@ -35,6 +35,7 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 import {ToastModule} from 'primeng/toast';
 import { CalendarModule } from 'primeng/calendar';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 import { ActaformComponent } from './pages/acta/actaform/actaform.component';
@@ -72,6 +73,7 @@ registerLocaleData(es, 'es-EC');
     ConfirmDialogModule,
     ToastModule,
     CalendarModule,
+    TooltipModule,
     MomentModule.forRoot({relativeTimeThresholdOptions:{ 'm':59}})
     //DataTablesModule
     //AgGridModule.withComponents([])
